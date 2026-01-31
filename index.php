@@ -1,12 +1,36 @@
 <?php
 require 'vendor/autoload.php';
 
-$page = $_GET['page'] ?? 'home';
+use App\Controllers\ProductController;
 
-if ($page === 'home') {
-    (new App\Controllers\HomeController())->index();
-} elseif ($page === 'students') {
-    (new App\Controllers\StudentController())->index();
-} else {
-    echo "404 - Không tìm thấy trang";
+$page = $_GET['page'] ?? 'product-list';
+$id = $_GET['id'] ?? null;
+
+$productController = new ProductController();
+
+switch ($page) {
+    case 'product-list':
+        $productController->index();
+        break;
+    case 'product-detail':
+        $productController->detail($id);
+        break;
+    case 'product-add':
+        $productController->create();
+        break;
+    case 'product-store':
+        $productController->store();
+        break;
+    case 'product-edit':
+        $productController->edit($id);
+        break;
+    case 'product-update':
+        $productController->update($id);
+        break;
+    case 'product-delete':
+        $productController->destroy($id);
+        break;
+    default:
+        $productController->index();
+        break;
 }

@@ -1,22 +1,25 @@
 <?php
 namespace App\Models;
 use PDO;
-use PDOException;
 
 class BaseModel {
-    protected $conn;
+    protected $pdo;
 
     public function __construct() {
         $host = 'localhost';
-        $dbname = 'buoi2_php'; 
-        $username = 'root';
-        $password = ''; 
+        $db   = 'buoi2_php'; 
+        $user = 'root';
+        $pass = ''; 
+        $charset = 'utf8mb4';
 
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
         try {
-            $this->conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
-            die("Hệ thống đang bảo trì, vui lòng quay lại sau.");
+            $this->pdo = new PDO($dsn, $user, $pass, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            ]);
+        } catch (\PDOException $e) {
+            die("Lỗi kết nối database: " . $e->getMessage());
         }
     }
 }
